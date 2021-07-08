@@ -16,11 +16,10 @@ Backstage TechDocs for making it easy to create, maintain, find, and use technic
 
 Plus, a growing ecosystem of open source plugins that further expand Backstage’s customizability and functionality
 
-#Key Concepts
+# Key Concepts
 - Backstage works as a decentralized system based on YAML files.  These files are generally kept in each piece of software's codebase and are referenced by Backstage.  This allows for each team/individual to have local ownership of the descriptions and documentation for their software.  
 
-- Items are added to the Software Catalog and are associated with one of seven 'Kinds', Component, System, API, Group, User, Resource, Location.  Custom Kinds can be added along with changing the show name of the base 7.  Items can be added through the UI by using a Template or by Registering Existing API.  They can also be hard coded into the app-config.yaml file.  These items should be limited to things that rarely change like Location or Group(Team).
-
+- Items are added to the Software Catalog and are associated with one of seven 'Kinds', Component, System, API, Group, User, Resource, Location, Domain.  Custom Kinds can be added along with changing the show name of the base 7.  Items can be added through the UI by using a Template or by Registering Existing API.  They can also be hard coded into the app-config.yaml file.  These items should be limited to things that rarely change like Location, Group(Team), or System.
 ```
 catalog:
   rules:
@@ -29,6 +28,22 @@ catalog:
     # Backstage example components
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
+```
+
+- Backstage requires a Postgres SQL database.  This is configured in the app-config.yaml file.  On Backstage starting, it will check the database for the needed Databases/Tables.  If these do not exist it will create them automatically.
+```
+# config options: https://node-postgres.com/api/client
+database:
+  client: pg
+  connection:
+    host: 34.72.61.151
+    port: 5432
+    user: someuser
+    password: $omePassW0rd
+    # https://node-postgres.com/features/ssl
+    #ssl: require # see https://www.postgresql.org/docs/current/libpq-ssl.html Table 33.1. SSL Mode Descriptions (e.g. require)
+      #ca: # if you have a CA file and want to verify it you can uncomment this section
+      #  $file: <file-path>/ca/server.crt
 ```
 
 
