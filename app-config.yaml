@@ -1,7 +1,7 @@
+---
 app:
-  title: Thoughtworks Backstage
+  title: Backstage Dev Portal
   baseUrl: http://localhost:3000
-
   support:
     url: https://github.com/backstage/backstage/issues # Used by common ErrorPage
     items: # Used by common SupportButton component
@@ -17,112 +17,140 @@ app:
             title: '#backstage'
 
 organization:
-  name: ThoughtWorks
-
+  name:
+    
 backend:
-  baseUrl: http://localhost:7000
+  baseUrl: http://localhost:7007
   listen:
-    port: 7000
+    port: 7007
   csp:
     connect-src: ["'self'", 'http:', 'https:']
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: http://localhost:3000
+    origin: http://localhost:7007
     methods: [GET, POST, PUT, DELETE]
     credentials: true
   # config options: https://node-postgres.com/api/client
   database:
     client: pg
     connection:
-      host: 34.72.61.151
-      port: 5432
-      user: postgres
-      password: thoughtworks
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      database: ${POSTGRES_DB}
       # https://node-postgres.com/features/ssl
-      #ssl: require # see https://www.postgresql.org/docs/current/libpq-ssl.html Table 33.1. SSL Mode Descriptions (e.g. require)
-        #ca: # if you have a CA file and want to verify it you can uncomment this section
-        #  $file: <file-path>/ca/server.crt
+      # ssl: require # see https://www.postgresql.org/docs/current/libpq-ssl.html
+      # Table 33.1. SSL Mode Descriptions (e.g. require)
+      #   ca: # if you have a CA file and want to verify it you can uncomment this section
+      #     $file: <file-path>/ca/server.crt
   cache:
     store: memory
-  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+    # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+  reading:
+    allow:
+      - host: '*.tw.com'
 
 integrations:
   bitbucket:
     - host: bitbucket.org
       username: ${BITBUCKET_USERNAME}
       appPassword: ${BITBUCKET_APP_PASSWORD}
-  github:
-    - host: github.com
-      token: ${GITHUB_TOKEN}
-    ### Example for how to add your GitHub Enterprise instance using the API:
-    # - host: ghe.example.net
-    #   apiBaseUrl: https://ghe.example.net/api/v3
-    #   token: ${GHE_TOKEN}
 
 proxy:
-  '/test':
-    target: 'https://example.com'
-    changeOrigin: true
+  '/circleci/api':
+    target: https://circleci.com/api/v1.1
+    headers:
+      Circle-Token: ${CIRCLECI_AUTH_TOKEN}
 
-# Reference documentation http://backstage.io/docs/features/techdocs/configuration
-# Note: After experimenting with basic setup, use CI/CD to generate docs
-# and an external cloud storage when deploying TechDocs for production use-case.
-# https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
-techdocs:
-  builder: 'local' # Alternatives - 'external'
-  generators:
-    techdocs: 'docker' # Alternatives - 'local'
-  publisher:
-    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+  # Environmental variable: SONARQUBE_TOKEN
+  # Fetch the sonar-auth-token from https://sonarcloud.io/account/security/
+  '/sonarqube':
+    target: https://sonar.tw.com/api
+    allowedMethods: ['GET']
+    auth: ${SONARQUBE_TOKEN}
+
+  '/lighthouse':
+    target: https://api.nonprod-internal.twcloud.com/productcore/lighthouse-audit-service
+    allowedMethods: ['GET', 'POST', 'PUT']
+
+sonarQube:
+  baseUrl: https://sonar.tw.com/
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   providers: {}
 
 scaffolder:
-  github:
-    token: ${GITHUB_TOKEN}
-    visibility: public # or 'internal' or 'private'
+  bitbucket:
+    api:
+      host: https://bitbucket.org
+      username: ${BITBUCKET_USERNAME}
+      token: ${BITBUCKET_APP_PASSWORD}
+
+techdocs:
+  builder: 'local'  # Alternatives - 'external'
+
+lighthouse:
+  baseUrl: ${LIGHTHOUSE_URL}
+
+techradar:
+  radarDataUrl: "./starterkits/backstage-techradar/radar-data.json"
+  username: ${BITBUCKET_USERNAME}
+  password: ${BITBUCKET_APP_PASSWORD}
+
 
 catalog:
   rules:
-    - allow: [Component, System, API, Group, User, Resource, Location]
+    - allow: [Component, System, API, Group, User, Resource, Location, Template]
   locations:
-    # Backstage example components
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
-
-    # Backstage example systems
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-systems.yaml
-
-    # Backstage example APIs
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
-
-    # Backstage example resources
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-resources.yaml
-
-    # Backstage example organization groups
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme/org.yaml
-
-    # Backstage example templates
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/react-ssr-template/template.yaml
+    #####
+    # Below are the Starter Kit Templates
+    #####
+    # Documentation Template
+    - type: path
+      target: ./starterkits/starterkit-docs/src/master/template.yaml
       rules:
         - allow: [Template]
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/springboot-grpc-template/template.yaml
+
+    # Node Backend Template
+    - type: path
+      target: ./starterkits/template-me-nodejs/src/master/template.yaml
       rules:
         - allow: [Template]
-    - type: url
-      target: https://github.com/spotify/cookiecutter-golang/blob/master/template.yaml
+
+    # Java starterkit from test-skeleton
+    - type: path
+      target: ./starterkits/test-skeleton/src/master/template.yaml
       rules:
         - allow: [Template]
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/docs-template/template.yaml
+
+    # Backstage template for local setup
+    - type: path
+      target: ./starterkits/local-setup/src/master/template.yaml
       rules:
         - allow: [Template]
+
+    # React Starterkit Template
+    - type: path
+      target: ./starterkits/template-me-nextjs/src/master/template.yaml
+      rules:
+        - allow: [Template]
+
+
+    #####
+    # Below are the Domain, System configurations
+    ####
+
+    # Corporate Services Domain
+    - type: url
+      target: https://bitbucket.org/wwgrainger/backstage_heirarchy/src/master/domains/corporate-services/catalog-info.yaml
+      rules:
+        - allow: [Domain]
+
+    # Corp services sub-domains
+    - type: url
+      target: https://bitbucket.org/wwgrainger/backstage_heirarchy/src/master/domains/corporate-services/sub-domains/EHS/catalog-info.yaml
+      rules:
+        - allow: [System]

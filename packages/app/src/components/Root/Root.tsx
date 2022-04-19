@@ -19,8 +19,13 @@ import { Link, makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import MapIcon from '@material-ui/icons/MyLocation';
+import School from '@material-ui/icons/School';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
+import GroupsIcon from '@material-ui/icons/Group';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
+import DomainIcon from '@material-ui/icons/Domain';
+import StartIcon from '@material-ui/icons/Star';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
 import { NavLink } from 'react-router-dom';
@@ -34,6 +39,7 @@ import {
   SidebarItem,
   SidebarDivider,
   SidebarSpace,
+  SidebarScrollWrapper,
 } from '@backstage/core-components';
 
 const useSidebarLogoStyles = makeStyles({
@@ -69,24 +75,32 @@ const SidebarLogo = () => {
   );
 };
 
-export const Root = ({ children }: PropsWithChildren<{}>) => (
-  <SidebarPage>
-    <Sidebar>
-      <SidebarLogo />
-      <SidebarSearch />
-      <SidebarDivider />
-      {/* Global nav, not org-specific */}
-      <SidebarItem icon={HomeIcon} to="/catalog" text="Home" />
-      <SidebarItem icon={ExtensionIcon} to="api-docs" text="APIs" />
-      <SidebarItem icon={LibraryBooks} to="docs" text="Docs" />
-      <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
-      {/* End global nav */}
-      <SidebarDivider />
-      <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
-      <SidebarSpace />
-      <SidebarDivider />
-      <SidebarSettings />
-    </Sidebar>
-    {children}
-  </SidebarPage>
-);
+export const Root = ({ children }: PropsWithChildren<{}>) => {
+  return (
+    <SidebarPage>
+      <Sidebar>
+        <SidebarLogo />
+        <SidebarSearch />
+        <SidebarDivider />
+        {/* Global nav, not org-specific */}
+        <SidebarItem icon={HomeIcon} to="/" text="Home" />
+        <SidebarItem icon={StartIcon} to="/getting-started" text="Getting Started" />
+        <SidebarItem icon={FormatListBulletedIcon} to="/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=all" text="Components" />
+        <SidebarItem icon={ExtensionIcon} to="api-docs" text="APIs" />
+        <SidebarItem icon={GroupsIcon} to="group?filters%5Bkind%5D=group&filters%5Buser%5D=all" text="Teams" />
+        <SidebarItem icon={DomainIcon} to="domain?filters%5Bkind%5D=domain&filters%5Buser%5D=all" text="Domains" />
+        <SidebarItem icon={LibraryBooks} to="docs" text="Docs" />
+        <SidebarItem icon={CreateComponentIcon} to="create" text="Starter Kits" />
+        {/* End global nav */}
+        <SidebarDivider />
+        <SidebarScrollWrapper>
+          <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+        </SidebarScrollWrapper>
+        <SidebarSpace />
+        <SidebarDivider />
+        <SidebarSettings />
+      </Sidebar>
+      {children}
+    </SidebarPage>
+  );
+}

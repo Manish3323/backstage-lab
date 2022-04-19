@@ -1,13 +1,28 @@
+---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: backstage-app
-  description: An example of a Backstage application.
-  # Example for optional annotations
-  # annotations:
-    # github.com/project-slug: backstage/backstage
-    # backstage.io/techdocs-ref: url:https://github.com/backstage/backstage
+  name: Backstage-Developer-Portal
+  description: tw's Developer Portal in built on the Backstage platform
+  title: Backstage Developer Portal
+  annotations:
+    backstage.io/techdocs-ref: url:https://backstage.internal.twcloud.com/docs/default/component/backstage-developer-portal
+    circleci.com/project-slug: bitbucket/wwtw/productcore-backstage
+    sonarqube.org/project-key: productcore-backstage
+    lighthouse.com/website-url: https://backstage-dev.nonprod-internal.twcloud.com/
+  links:
+    - url: https://app.datadoghq.com/dashboard/gph-dx6-dab/productcore-backstage---prod?from_ts=1637008539167&to_ts=1637012139167&live=true
+      title: Dashboard
+      icon: dashboard
+    - url: https://backstage-dev.nonprod-internal.twcloud.com/
+      title: Backstage Dev Environment
+      icon: web
+    - url: https://backstage.internal.twcloud.com/
+      title: Backstage Production Environment
+      con: web
+
 spec:
   type: website
-  owner: john@example.com
-  lifecycle: experimental
+  system: tw-backstage
+  owner: productcore
+  lifecycle: production

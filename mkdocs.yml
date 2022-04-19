@@ -1,0 +1,15 @@
+---
+site_name: Backstage Developer Portal
+site_description: tw's Developer Portal in built on the Backstage platform
+
+nav:
+  - 'Overview': index.md
+  - 'Available Plugins':
+      - 'CircleCi Plugin QuickStart': plugins/circleci-quickstart.md
+      - 'Catalog Import Plugin QuickStart': plugins/catalogimport-quickstart.md
+      - 'Sonarqube Plugin QuickStart': plugins/sonarqube-quickstart.md
+      - 'Create Your Own Plugins': plugins/create-plugins-quickstart.md
+  - 'Additional Features': features.md
+
+plugins:
+  - techdocs-core

@@ -24,10 +24,23 @@ import {
   EntityProvidingComponentsCard,
 } from '@backstage/plugin-api-docs';
 import {
+  Direction,
+  EntityCatalogGraphCard,
+} from '@backstage/plugin-catalog-graph';
+import {
+  RELATION_API_CONSUMED_BY,
+  RELATION_API_PROVIDED_BY,
+  RELATION_CONSUMES_API,
+  RELATION_DEPENDENCY_OF,
+  RELATION_DEPENDS_ON,
+  RELATION_HAS_PART,
+  RELATION_PART_OF,
+  RELATION_PROVIDES_API,
+} from '@backstage/catalog-model';
+import {
   EntityAboutCard,
   EntityDependsOnComponentsCard,
   EntityDependsOnResourcesCard,
-  EntitySystemDiagramCard,
   EntityHasComponentsCard,
   EntityHasResourcesCard,
   EntityHasSubcomponentsCard,
@@ -35,8 +48,12 @@ import {
   EntityLayout,
   EntityLinksCard,
   EntitySwitch,
+  EntityOrphanWarning,
+  EntityProcessingErrorsPanel,
   isComponentType,
   isKind,
+  hasCatalogProcessingErrors,
+  isOrphan,
 } from '@backstage/plugin-catalog';
 import {
   isGithubActionsAvailable,
@@ -49,7 +66,17 @@ import {
   EntityOwnershipCard,
 } from '@backstage/plugin-org';
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
+import {
+  EntityLighthouseContent,
+  EntityLastLighthouseAuditCard,
+  isLighthouseAvailable,
+} from '@backstage/plugin-lighthouse';
 import { EmptyState } from '@backstage/core-components';
+import {
+  EntityCircleCIContent,
+  isCircleCIAvailable,
+} from '@backstage/plugin-circleci';
+import { EntitySonarQubeCard } from '@backstage/plugin-sonarqube';
 
 const cicdContent = (
   // This is an example of how you can implement your company's logic in entity page.
@@ -57,6 +84,10 @@ const cicdContent = (
   <EntitySwitch>
     <EntitySwitch.Case if={isGithubActionsAvailable}>
       <EntityGithubActionsContent />
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isCircleCIAvailable}>
+      <EntityCircleCIContent />
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>
@@ -78,10 +109,34 @@ const cicdContent = (
   </EntitySwitch>
 );
 
+const entityWarningContent = (
+  <>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isOrphan}>
+        <Grid item xs={12}>
+          <EntityOrphanWarning />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={hasCatalogProcessingErrors}>
+        <Grid item xs={12}>
+          <EntityProcessingErrorsPanel />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+  </>
+);
+
 const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
+    {entityWarningContent}
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
+    </Grid>
+    <Grid item md={6}>
+      <EntitySonarQubeCard variant="gridItem" />
     </Grid>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
@@ -89,6 +144,13 @@ const overviewContent = (
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isLighthouseAvailable}>
+        <Grid item md={6}>
+          <EntityLastLighthouseAuditCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
   </Grid>
 );
 
@@ -154,8 +216,19 @@ const websiteEntityPage = (
     <EntityLayout.Route path="/docs" title="Docs">
       <EntityTechdocsContent />
     </EntityLayout.Route>
+
+    <EntityLayout.Route path="/lighthouse" title="Lighthouse">
+      <EntityLighthouseContent />
+    </EntityLayout.Route>
   </EntityLayout>
 );
+
+/**
+ * NOTE: This page is designed to work on small screens such as mobile devices.
+ * This is based on Material UI Grid. If breakpoints are used, each grid item must set the `xs` prop to a column size or to `true`,
+ * since this does not default. If no breakpoints are used, the items will equitably share the available space.
+ * https://material-ui.com/components/grid/#basic-grid.
+ */
 
 const defaultEntityPage = (
   <EntityLayout>
@@ -174,7 +247,9 @@ const componentPage = (
     <EntitySwitch.Case if={isComponentType('service')}>
       {serviceEntityPage}
     </EntitySwitch.Case>
-
+    <EntitySwitch.Case if={isComponentType('starterkit')}>
+      {serviceEntityPage}
+    </EntitySwitch.Case>
     <EntitySwitch.Case if={isComponentType('website')}>
       {websiteEntityPage}
     </EntitySwitch.Case>
@@ -187,8 +262,12 @@ const apiPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
+        {entityWarningContent}
         <Grid item md={6}>
           <EntityAboutCard />
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <EntityLinksCard />
         </Grid>
         <Grid container item md={12}>
           <Grid item md={6}>
@@ -215,6 +294,7 @@ const userPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
+        {entityWarningContent}
         <Grid item xs={12} md={6}>
           <EntityUserProfileCard variant="gridItem" />
         </Grid>
@@ -230,6 +310,7 @@ const groupPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
+        {entityWarningContent}
         <Grid item xs={12} md={6}>
           <EntityGroupProfileCard variant="gridItem" />
         </Grid>
@@ -248,6 +329,7 @@ const systemPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3} alignItems="stretch">
+        {entityWarningContent}
         <Grid item md={6}>
           <EntityAboutCard variant="gridItem" />
         </Grid>
@@ -263,7 +345,23 @@ const systemPage = (
       </Grid>
     </EntityLayout.Route>
     <EntityLayout.Route path="/diagram" title="Diagram">
-      <EntitySystemDiagramCard />
+      <EntityCatalogGraphCard
+        variant="gridItem"
+        direction={Direction.TOP_BOTTOM}
+        title="System Diagram"
+        height={700}
+        relations={[
+          RELATION_PART_OF,
+          RELATION_HAS_PART,
+          RELATION_API_CONSUMED_BY,
+          RELATION_API_PROVIDED_BY,
+          RELATION_CONSUMES_API,
+          RELATION_PROVIDES_API,
+          RELATION_DEPENDENCY_OF,
+          RELATION_DEPENDS_ON,
+        ]}
+        unidirectional={false}
+      />
     </EntityLayout.Route>
   </EntityLayout>
 );
@@ -272,6 +370,7 @@ const domainPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3} alignItems="stretch">
+        {entityWarningContent}
         <Grid item md={6}>
           <EntityAboutCard variant="gridItem" />
         </Grid>

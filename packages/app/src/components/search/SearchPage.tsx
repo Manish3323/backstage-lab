@@ -1,14 +1,18 @@
 import React from 'react';
 import { makeStyles, Theme, Grid, List, Paper } from '@material-ui/core';
 
-import { CatalogResultListItem } from '@backstage/plugin-catalog';
 import {
   SearchBar,
   SearchFilter,
   SearchResult,
   DefaultResultListItem,
+  SearchType,
+  SearchResultPager
 } from '@backstage/plugin-search';
 import { Content, Header, Page } from '@backstage/core-components';
+import { TechDocsListItem } from './TechDocsListItem';
+import { ApiResultListItem } from './ApiResultListItem';
+import { CatalogResultsListItem } from './CatalogResultsListItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -39,6 +43,11 @@ const SearchPage = () => {
           </Grid>
           <Grid item xs={3}>
             <Paper className={classes.filters}>
+              <SearchType
+                values={['api', 'software-catalog', 'techdocs']}
+                name="type"
+                defaultValue=""
+              />
               <SearchFilter.Select
                 className={classes.filter}
                 name="kind"
@@ -59,7 +68,21 @@ const SearchPage = () => {
                     switch (type) {
                       case 'software-catalog':
                         return (
-                          <CatalogResultListItem
+                          <CatalogResultsListItem
+                            key={document.location}
+                            result={document}
+                          />
+                        );
+                      case 'techdocs':
+                        return (
+                          <TechDocsListItem
+                            key={document.location}
+                            result={document}
+                          />
+                        );
+                      case 'api':
+                        return (
+                          <ApiResultListItem
                             key={document.location}
                             result={document}
                           />
@@ -76,6 +99,7 @@ const SearchPage = () => {
                 </List>
               )}
             </SearchResult>
+            <SearchResultPager />
           </Grid>
         </Grid>
       </Content>

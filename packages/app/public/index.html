@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="cache-control", content="no-cache, no-store, must-revalidate"/>
     <meta
       name="description"
       content="Backstage is an open platform for building developer portals"
@@ -47,12 +49,11 @@
         min-height: 100%;
       }
     </style>
-    <title><%= app.title %></title>
-    <% if (app.googleAnalyticsTrackingId && typeof app.googleAnalyticsTrackingId
-    === 'string') { %>
+    <title><%= config.getString('app.title') %></title>
+    <% if (config.has('app.googleAnalyticsTrackingId')) { %>
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=<%= app.googleAnalyticsTrackingId %>"
+      src="https://www.googletagmanager.com/gtag/js?id=<%= config.getString('app.googleAnalyticsTrackingId') %>"
     ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -61,11 +62,14 @@
       }
       gtag('js', new Date());
 
-      gtag('config', '<%= app.googleAnalyticsTrackingId %>');
+      gtag(
+        'config',
+        '<%= config.getString("app.googleAnalyticsTrackingId") %>',
+      );
     </script>
     <% } %>
   </head>
-  <body style="margin: 0;">
+  <body style="margin: 0">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

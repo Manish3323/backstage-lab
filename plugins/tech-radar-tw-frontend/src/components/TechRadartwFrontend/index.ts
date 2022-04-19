@@ -1,0 +1,1 @@
+export { TechRadartwFrontend } from './TechRadartwFrontend';

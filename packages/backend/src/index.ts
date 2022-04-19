@@ -17,7 +17,9 @@ import {
   DatabaseManager,
   SingleHostDiscovery,
   UrlReaders,
+  ServerTokenManager
 } from '@backstage/backend-common';
+import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
 import app from './plugins/app';
 import auth from './plugins/auth';
@@ -26,23 +28,40 @@ import scaffolder from './plugins/scaffolder';
 import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import search from './plugins/search';
+import healthcheck from './plugins/healthcheck';
+import techradar from './plugins/techradar';
 import { PluginEnvironment } from './types';
+import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
   const reader = UrlReaders.default({ logger: root, config });
   const discovery = SingleHostDiscovery.fromConfig(config);
-
-  root.info(`Created UrlReader ${reader}`);
-
   const cacheManager = CacheManager.fromConfig(config);
   const databaseManager = DatabaseManager.fromConfig(config);
+  const tokenManager = ServerTokenManager.noop();
+  const taskScheduler = TaskScheduler.fromConfig(config);
+  const permissions = ServerPermissionClient.fromConfig(config, {
+    discovery,
+    tokenManager,
+  });
 
   return (plugin: string): PluginEnvironment => {
     const logger = root.child({ type: 'plugin', plugin });
     const database = databaseManager.forPlugin(plugin);
     const cache = cacheManager.forPlugin(plugin);
-    return { logger, database, cache, config, reader, discovery };
+    const scheduler = taskScheduler.forPlugin(plugin);
+    return {
+      logger,
+      database,
+      cache,
+      config,
+      reader,
+      discovery,
+      tokenManager,
+      scheduler,
+      permissions,
+    };
   };
 }
 
@@ -60,6 +79,8 @@ async function main() {
   const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
   const searchEnv = useHotMemoize(module, () => createEnv('search'));
   const appEnv = useHotMemoize(module, () => createEnv('app'));
+  const healthcheckEnv = useHotMemoize(module, () => createEnv('healthcheck'));
+  const techradarEnv = useHotMemoize(module, () => createEnv('techradar'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -68,10 +89,12 @@ async function main() {
   apiRouter.use('/techdocs', await techdocs(techdocsEnv));
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/search', await search(searchEnv));
+  apiRouter.use('/techradar', await techradar(techradarEnv));
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)
     .loadConfig(config)
+    .addRouter('', await healthcheck(healthcheckEnv))
     .addRouter('/api', apiRouter)
     .addRouter('', await app(appEnv));
 

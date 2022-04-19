@@ -1,3 +1,5 @@
+# [Backstage](https://backstage.io)
+
 # ThoughtWorks Backstage
 
 This is a base application of the backstage open source project.  https://backstage.io/
@@ -40,10 +42,7 @@ database:
     port: 5432
     user: someuser
     password: $omePassW0rd
-    # https://node-postgres.com/features/ssl
-    #ssl: require # see https://www.postgresql.org/docs/current/libpq-ssl.html Table 33.1. SSL Mode Descriptions (e.g. require)
-      #ca: # if you have a CA file and want to verify it you can uncomment this section
-      #  $file: <file-path>/ca/server.crt
+
 ```
 
 
