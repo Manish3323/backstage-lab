@@ -50,6 +50,7 @@ import {
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import GroupIcon from '@material-ui/icons/People';
 import { SearchModal } from '../search/SearchModal';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 
 const useSidebarLogoStyles = makeStyles({
   root: {
@@ -96,12 +97,13 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
       <SidebarDivider />
       <SidebarGroup label="Menu" icon={<MenuIcon />}>
         {/* Global nav, not org-specific */}
-        <SidebarItem icon={HomeIcon} to="catalog" text="Home" />
+        <SidebarItem icon={HomeIcon} to="/" text="Home" />
         <MyGroupsSidebarItem
           singularTitle="My Squad"
           pluralTitle="My Squads"
           icon={GroupIcon}
         />
+        <SidebarItem icon={FormatListBulletedIcon} to="catalog" text="Components" />
         <SidebarItem icon={ExtensionIcon} to="api-docs" text="APIs" />
         <SidebarItem icon={LibraryBooks} to="docs" text="Docs" />
         <SidebarItem icon={LayersIcon} to="explore" text="Explore" />

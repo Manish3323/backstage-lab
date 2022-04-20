@@ -92,6 +92,7 @@ import { techDocsPage } from './components/techdocs/TechDocsPage';
 import { ApacheAirflowPage } from '@backstage/plugin-apache-airflow';
 import { PermissionedRoute } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common';
+import { TwHomePage } from '@backstage/plugin-tw-home';
 
 const app = createApp({
   apis,
@@ -134,7 +135,8 @@ const AppRouter = app.getRouter();
 
 const routes = (
   <FlatRoutes>
-    <Navigate key="/" to="catalog" />
+    <Route path="/" element={<TwHomePage/>} />
+    <Route path="/catalog" element={<CatalogIndexPage />} />
     {/* TODO(rubenl): Move this to / once its more mature and components exist */}
     <Route path="/home" element={<HomepageCompositionRoot />}>
       {homePage}
@@ -228,6 +230,7 @@ const routes = (
     </Route>
     <Route path="/azure-pull-requests" element={<AzurePullRequestsPage />} />
     <Route path="/apache-airflow" element={<ApacheAirflowPage />} />
+    <Route path="/tw-home" element={<TwHomePage />} />
   </FlatRoutes>
 );
 
