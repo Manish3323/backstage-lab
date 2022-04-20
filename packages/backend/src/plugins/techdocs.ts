@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 The Backstage Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { DockerContainerRunner } from '@backstage/backend-common';
 import {
   createRouter,
@@ -9,17 +25,13 @@ import Docker from 'dockerode';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin({
-  logger,
-  config,
-  discovery,
-  reader,
-  cache,
-}: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   // Preparers are responsible for fetching source files for documentation.
-  const preparers = await Preparers.fromConfig(config, {
-    logger,
-    reader,
+  const preparers = await Preparers.fromConfig(env.config, {
+    logger: env.logger,
+    reader: env.reader,
   });
 
   // Docker client (conditionally) used by the generators, based on techdocs.generators config.
@@ -27,17 +39,17 @@ export default async function createPlugin({
   const containerRunner = new DockerContainerRunner({ dockerClient });
 
   // Generators are used for generating documentation sites.
-  const generators = await Generators.fromConfig(config, {
-    logger,
+  const generators = await Generators.fromConfig(env.config, {
+    logger: env.logger,
     containerRunner,
   });
 
   // Publisher is used for
   // 1. Publishing generated files to storage
   // 2. Fetching files from storage and passing them to TechDocs frontend.
-  const publisher = await Publisher.fromConfig(config, {
-    logger,
-    discovery,
+  const publisher = await Publisher.fromConfig(env.config, {
+    logger: env.logger,
+    discovery: env.discovery,
   });
 
   // checks if the publisher is working and logs the result
@@ -47,9 +59,9 @@ export default async function createPlugin({
     preparers,
     generators,
     publisher,
-    logger,
-    config,
-    discovery,
-    cache,
+    logger: env.logger,
+    config: env.config,
+    discovery: env.discovery,
+    cache: env.cache,
   });
 }

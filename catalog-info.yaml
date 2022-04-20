@@ -1,28 +1,23 @@
----
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: Backstage-Developer-Portal
-  description: tw's Developer Portal in built on the Backstage platform
-  title: Backstage Developer Portal
-  annotations:
-    backstage.io/techdocs-ref: url:https://backstage.internal.twcloud.com/docs/default/component/backstage-developer-portal
-    circleci.com/project-slug: bitbucket/wwtw/productcore-backstage
-    sonarqube.org/project-key: productcore-backstage
-    lighthouse.com/website-url: https://backstage-dev.nonprod-internal.twcloud.com/
+  name: backstage
+  description: |
+    Backstage is an open-source developer portal that puts the developer experience first.
   links:
-    - url: https://app.datadoghq.com/dashboard/gph-dx6-dab/productcore-backstage---prod?from_ts=1637008539167&to_ts=1637012139167&live=true
-      title: Dashboard
-      icon: dashboard
-    - url: https://backstage-dev.nonprod-internal.twcloud.com/
-      title: Backstage Dev Environment
-      icon: web
-    - url: https://backstage.internal.twcloud.com/
-      title: Backstage Production Environment
-      con: web
-
+    - title: Website
+      url: http://backstage.io
+    - title: Documentation
+      url: https://backstage.io/docs
+    - title: Storybook
+      url: https://backstage.io/storybook
+    - title: Discord Chat
+      url: https://discord.com/invite/EBHEGzX
+  annotations:
+    github.com/project-slug: backstage/backstage
+    backstage.io/techdocs-ref: dir:.
+    lighthouse.com/website-url: https://backstage.io
 spec:
-  type: website
-  system: tw-backstage
-  owner: productcore
-  lifecycle: production
+  type: library
+  owner: CNCF
+  lifecycle: experimental

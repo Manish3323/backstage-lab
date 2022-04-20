@@ -18,29 +18,38 @@ import React, { useContext, PropsWithChildren } from 'react';
 import { Link, makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import ExtensionIcon from '@material-ui/icons/Extension';
+import RuleIcon from '@material-ui/icons/AssignmentTurnedIn';
 import MapIcon from '@material-ui/icons/MyLocation';
-import School from '@material-ui/icons/School';
+import LayersIcon from '@material-ui/icons/Layers';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
-import GroupsIcon from '@material-ui/icons/Group';
-import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
-import DomainIcon from '@material-ui/icons/Domain';
-import StartIcon from '@material-ui/icons/Star';
+import SearchIcon from '@material-ui/icons/Search';
+import MenuIcon from '@material-ui/icons/Menu';
+import MoneyIcon from '@material-ui/icons/MonetizationOn';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
 import { NavLink } from 'react-router-dom';
-import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
-import { SidebarSearch } from '@backstage/plugin-search';
+import { GraphiQLIcon } from '@backstage/plugin-graphiql';
+import {
+  Settings as SidebarSettings,
+  UserSettingsSignInAvatar,
+} from '@backstage/plugin-user-settings';
+import { SidebarSearchModal } from '@backstage/plugin-search';
+import { Shortcuts } from '@backstage/plugin-shortcuts';
 import {
   Sidebar,
-  SidebarPage,
   sidebarConfig,
   SidebarContext,
-  SidebarItem,
   SidebarDivider,
-  SidebarSpace,
+  SidebarGroup,
+  SidebarItem,
+  SidebarPage,
   SidebarScrollWrapper,
+  SidebarSpace,
 } from '@backstage/core-components';
+import { MyGroupsSidebarItem } from '@backstage/plugin-org';
+import GroupIcon from '@material-ui/icons/People';
+import { SearchModal } from '../search/SearchModal';
 
 const useSidebarLogoStyles = makeStyles({
   root: {
@@ -75,32 +84,53 @@ const SidebarLogo = () => {
   );
 };
 
-export const Root = ({ children }: PropsWithChildren<{}>) => {
-  return (
-    <SidebarPage>
-      <Sidebar>
-        <SidebarLogo />
-        <SidebarSearch />
-        <SidebarDivider />
+export const Root = ({ children }: PropsWithChildren<{}>) => (
+  <SidebarPage>
+    <Sidebar>
+      <SidebarLogo />
+      <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
+        <SidebarSearchModal>
+          {({ toggleModal }) => <SearchModal toggleModal={toggleModal} />}
+        </SidebarSearchModal>
+      </SidebarGroup>
+      <SidebarDivider />
+      <SidebarGroup label="Menu" icon={<MenuIcon />}>
         {/* Global nav, not org-specific */}
-        <SidebarItem icon={HomeIcon} to="/" text="Home" />
-        <SidebarItem icon={StartIcon} to="/getting-started" text="Getting Started" />
-        <SidebarItem icon={FormatListBulletedIcon} to="/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=all" text="Components" />
+        <SidebarItem icon={HomeIcon} to="catalog" text="Home" />
+        <MyGroupsSidebarItem
+          singularTitle="My Squad"
+          pluralTitle="My Squads"
+          icon={GroupIcon}
+        />
         <SidebarItem icon={ExtensionIcon} to="api-docs" text="APIs" />
-        <SidebarItem icon={GroupsIcon} to="group?filters%5Bkind%5D=group&filters%5Buser%5D=all" text="Teams" />
-        <SidebarItem icon={DomainIcon} to="domain?filters%5Bkind%5D=domain&filters%5Buser%5D=all" text="Domains" />
         <SidebarItem icon={LibraryBooks} to="docs" text="Docs" />
-        <SidebarItem icon={CreateComponentIcon} to="create" text="Starter Kits" />
+        <SidebarItem icon={LayersIcon} to="explore" text="Explore" />
+        <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
         {/* End global nav */}
         <SidebarDivider />
         <SidebarScrollWrapper>
           <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+          <SidebarItem icon={RuleIcon} to="lighthouse" text="Lighthouse" />
+          <SidebarItem
+            icon={MoneyIcon}
+            to="cost-insights"
+            text="Cost Insights"
+          />
+          <SidebarItem icon={GraphiQLIcon} to="graphiql" text="GraphiQL" />
         </SidebarScrollWrapper>
-        <SidebarSpace />
         <SidebarDivider />
+        <Shortcuts />
+      </SidebarGroup>
+      <SidebarSpace />
+      <SidebarDivider />
+      <SidebarGroup
+        label="Settings"
+        icon={<UserSettingsSignInAvatar />}
+        to="/settings"
+      >
         <SidebarSettings />
-      </Sidebar>
-      {children}
-    </SidebarPage>
-  );
-}
+      </SidebarGroup>
+    </Sidebar>
+    {children}
+  </SidebarPage>
+);

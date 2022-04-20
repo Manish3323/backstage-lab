@@ -1,11 +1,8 @@
 .git
-.circleci
+docs
+cypress
+microsite
 node_modules
-packages/*/dist
-packages/*/node_modules
-plugins/*/dist
-plugins/*/node_modules
-deployment
-certs
-Dockerfile
-app-config.local.yaml
+packages
+!packages/backend/dist
+plugins

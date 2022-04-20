@@ -1,1 +1,0 @@
-export { TechRadartwFrontend } from './TechRadartwFrontend';

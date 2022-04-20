@@ -1,28 +1,28 @@
-import { 
-  createStatusCheckRouter,
-  PluginDatabaseManager
-} from '@backstage/backend-common';
+/*
+ * Copyright 2020 The Backstage Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { createStatusCheckRouter } from '@backstage/backend-common';
+import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 
-
-function checkDB(database:PluginDatabaseManager ): () => Promise<any> {
-  return async () => {
-    let dbStatus;
-    try {
-      const db = await database.getClient()
-      db.raw("select 1+1 as result");
-      dbStatus = 'ok';
-    } catch (error) {
-      dbStatus = "No DB Connection.";
-    }
-    
-    return {
-      dbStatus
-    }
-  }
-}
-
-export default async function createRouter({ logger, database }: PluginEnvironment) {
-  
-  return await createStatusCheckRouter({ logger, path: '/readiness',  statusCheck: checkDB (database)});
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  return await createStatusCheckRouter({
+    logger: env.logger,
+    path: '/healthcheck',
+  });
 }
