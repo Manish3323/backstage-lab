@@ -1,69 +1,97 @@
 ![headline](docs/assets/headline.png)
 
-# [Backstage](https://backstage.io)
+# ThoughtWorks Backstage
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![CNCF Status](https://img.shields.io/badge/cncf%20status-incubation-blue.svg)](https://www.cncf.io/projects)
-[![Main CI Build](https://github.com/backstage/backstage/workflows/Main%20Master%20Build/badge.svg)](https://github.com/backstage/backstage/actions?query=workflow%3A%22Main+Master+Build%22)
-[![Discord](https://img.shields.io/discord/687207715902193673)](https://discord.gg/EBHEGzX)
-![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
-[![Codecov](https://img.shields.io/codecov/c/github/backstage/backstage)](https://codecov.io/gh/backstage/backstage)
-[![](https://img.shields.io/npm/v/@backstage/core?label=Version)](https://github.com/backstage/backstage/releases)
+This is a base application of the backstage open source project.  https://backstage.io/
 
-## What is Backstage?
-
-[Backstage](https://backstage.io/) is an open platform for building developer portals. Powered by a centralized software catalog, Backstage restores order to your microservices and infrastructure and enables your product teams to ship high-quality code quickly — without compromising autonomy.
+Backstage is an open platform for building developer portals. Powered by a centralized software catalog, Backstage restores order to your microservices and infrastructure and enables your product teams to ship high-quality code quickly — without compromising autonomy.
 
 Backstage unifies all your infrastructure tooling, services, and documentation to create a streamlined development environment from end to end.
 
-![software-catalog](https://backstage.io/blog/assets/6/header.png)
-
 Out of the box, Backstage includes:
 
-- [Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/software-catalog-overview) for managing all your software (microservices, libraries, data pipelines, websites, ML models, etc.)
-- [Backstage Software Templates](https://backstage.io/docs/features/software-templates/software-templates-index) for quickly spinning up new projects and standardizing your tooling with your organization’s best practices
-- [Backstage TechDocs](https://backstage.io/docs/features/techdocs/techdocs-overview) for making it easy to create, maintain, find, and use technical documentation, using a "docs like code" approach
-- Plus, a growing ecosystem of [open source plugins](https://github.com/backstage/backstage/tree/master/plugins) that further expand Backstage’s customizability and functionality
+Backstage Software Catalog for managing all your software (microservices, libraries, data pipelines, websites, ML models, etc.)
 
-Backstage was created by Spotify but is now hosted by the [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io) as an Incubation level project. Read the announcement [here](https://backstage.io/blog/2022/03/16/backstage-turns-two#out-of-the-sandbox-and-into-incubation).
+Backstage Software Templates for quickly spinning up new projects and standardizing your tooling with your organization’s best practices
 
-## Project roadmap
+Backstage TechDocs for making it easy to create, maintain, find, and use technical documentation, using a "docs like code" approach
 
-A detailed project roadmap, including already delivered milestones, is available [here](https://backstage.io/docs/overview/roadmap).
+Plus, a growing ecosystem of open source plugins that further expand Backstage’s customizability and functionality
 
-## Getting Started
+# Key Concepts
+- Backstage works as a decentralized system based on YAML files.  These files are generally kept in each piece of software's codebase and are referenced by Backstage.  This allows for each team/individual to have local ownership of the descriptions and documentation for their software.  
 
-Check out [the documentation](https://backstage.io/docs/getting-started) on how to start using Backstage.
+- Items are added to the Software Catalog and are associated with one of seven 'Kinds', Component, System, API, Group, User, Resource, Location, Domain.  Custom Kinds can be added along with changing the show name of the base 7.  Items can be added through the UI by using a Template or by Registering Existing API.  They can also be hard coded into the app-config.yaml file.  These items should be limited to things that rarely change like Location, Group(Team), or System.
+```
+catalog:
+  rules:
+    - allow: [Component, System, API, Group, User, Resource, Location]
+  locations:
+    # Backstage example components
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
+```
 
-## Documentation
+- Backstage requires a Postgres SQL database.  This is configured in the app-config.yaml file.  On Backstage starting, it will check the database for the needed Databases/Tables.  If these do not exist it will create them automatically.
+```
+# config options: https://node-postgres.com/api/client
+database:
+  client: pg
+  connection:
+    host: 34.72.61.151
+    port: 5432
+    user: someuser
+    password: $omePassW0rd
 
-- [Main documentation](https://backstage.io/docs)
-- [Software Catalog](https://backstage.io/docs/features/software-catalog/software-catalog-overview)
-- [Architecture](https://backstage.io/docs/overview/architecture-overview) ([Decisions](https://backstage.io/docs/architecture-decisions/adrs-overview))
-- [Designing for Backstage](https://backstage.io/docs/dls/design)
-- [Storybook - UI components](https://backstage.io/storybook)
+```
 
-## Community
 
-- [Discord chatroom](https://discord.gg/MUpMjP2) - Get support or discuss the project
-- [Contributing to Backstage](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md) - Start here if you want to contribute
-- [RFCs](https://github.com/backstage/backstage/labels/rfc) - Help shape the technical direction
-- [FAQ](https://backstage.io/docs/FAQ) - Frequently Asked Questions
-- [Code of Conduct](CODE_OF_CONDUCT.md) - This is how we roll
-- [Adopters](ADOPTERS.md) - Companies already using Backstage
-- [Blog](https://backstage.io/blog/) - Announcements and updates
-- [Newsletter](https://mailchi.mp/spotify/backstage-community) - Subscribe to our email newsletter
-- [Backstage Community Sessions](https://github.com/backstage/community) - Join monthly meetup and explore Backstage community
-- Give us a star ⭐️ - If you are using Backstage or think it is an interesting project, we would love a star ❤️
+# Usage
+This repo has all of the necessary components to demo backstage or use as a starter kit for deployment.
 
-## License
 
-Copyright 2020-2021 © The Backstage Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: https://www.linuxfoundation.org/trademark-usage
+## How to run application locally
+Clone the repo and run the following commands from the root directory
 
-Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+```
+# Install yarn
+yarn install
 
-## Security
+# this will start the front and backend along with opening a browser window to http://localhost:3000
+yarn dev
+```
 
-Please report sensitive security issues via Spotify's [bug-bounty program](https://hackerone.com/spotify) rather than GitHub.
+## How to create an Image to deploy
+Clone the repo and follow the steps below
 
-For further details please see our complete [security release process](SECURITY.md).
+```
+# Install yarn in root directory
+yarn install
+
+# move to the backend directory
+cd packages/backend
+
+# install yarn
+yarn install
+
+# tsc outputs type definitions to dist-types/ in the repo root, which are then consumed by the build
+yarn tsc
+
+# Build all packages and in the end bundle them all up into the packages/backend/dist folder.
+yarn build
+```
+
+Now build the image.  The Dockerfile is located at packages/backend/Dockerfile, but needs to be executed with the root of the repo as the build context, in order to get access to the root yarn.lock and package.json, along with any other files that might be needed, such as .npmrc
+
+From the root directory now run:
+
+```
+docker image build . -f packages/backend/Dockerfile --tag backstage
+```
+
+That should be it.  To try out the image locally run:
+```
+docker run -it -p 7000:7000 backstage
+```
+
+For more information check out the Backstage site - https://backstage.io/docs/deployment/
