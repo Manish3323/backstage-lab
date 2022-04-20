@@ -1,0 +1,8 @@
+site_name: "exampleDomain"
+site_description: "Example Domain"
+
+nav:
+  - Introduction: index.md
+
+plugins:
+  - techdocs-core

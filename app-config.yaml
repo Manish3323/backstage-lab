@@ -18,7 +18,7 @@ app:
 
 organization:
   name:
-    
+
 backend:
   baseUrl: http://localhost:7007
   listen:
@@ -106,37 +106,26 @@ catalog:
     - allow: [Component, System, API, Group, User, Resource, Location, Template]
   locations:
     #####
-    # Below are the Starter Kit Templates
+    # Below are the Stater Kit Templates
     #####
     # Documentation Template
     - type: path
-      target: ./starterkits/starterkit-docs/src/master/template.yaml
-      rules:
-        - allow: [Template]
-
-    # Node Backend Template
-    - type: path
-      target: ./starterkits/template-me-nodejs/src/master/template.yaml
-      rules:
-        - allow: [Template]
-
-    # Java starterkit from test-skeleton
-    - type: path
-      target: ./starterkits/test-skeleton/src/master/template.yaml
+      target: https://github.com/ThoughtWorks-DPS/backstage-lab/starterkits/starterkit-docs/src/master/template.yaml
       rules:
         - allow: [Template]
 
     # Backstage template for local setup
-    - type: path
-      target: ./starterkits/local-setup/src/master/template.yaml
+    - type: url
+      target: https://github.com/ThoughtWorks-DPS/backstage-lab/starterkits/local-setup/src/master/template.yaml
       rules:
         - allow: [Template]
 
     # React Starterkit Template
-    - type: path
-      target: ./starterkits/template-me-nextjs/src/master/template.yaml
+    - type: url
+      target: https://github.com/ThoughtWorks-DPS/backstage-lab/starterkits/template-me-nextjs/src/master/template.yaml
       rules:
         - allow: [Template]
+
 
 
     #####
@@ -145,12 +134,12 @@ catalog:
 
     # Corporate Services Domain
     - type: url
-      target: https://bitbucket.org/wwgrainger/backstage_heirarchy/src/master/domains/corporate-services/catalog-info.yaml
+      target: https://github.com/ThoughtWorks-DPS/backstage-lab/domains/exampleDomain/catalog-info.yaml
       rules:
         - allow: [Domain]
 
     # Corp services sub-domains
     - type: url
-      target: https://bitbucket.org/wwgrainger/backstage_heirarchy/src/master/domains/corporate-services/sub-domains/EHS/catalog-info.yaml
+      target: https://github.com/ThoughtWorks-DPS/backstage-lab/domains/exampleSystem/catalog-info.yaml
       rules:
         - allow: [System]
