@@ -160,9 +160,9 @@ allure:
   baseUrl: http://localhost:5050/allure-docker-service
 
 integrations:
-  github:
-    - host: github.com
-      token: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCgU+fAtotrpvGMnc9pprLLWF8/XSYcSddXD7U6JNHLk8H4WaG3zYlFSuK0pSLzuXr2ZyDHOsKsmSZBShS5eMYYVNvp1EH8KykKP17sc7JUS7kTdYidrfBdCKOJUirnY+iEb6cc3RtKibGIJkBAcySNctpsxHnFOw7l9b4VF4pc1SztExxOr6njHBMO8K5+biWsdHc1wd5tck9Vx+c171QZSSVSYERbRbF2oAW2HdW+J3imjmHeDtQr+4ok2RKpmxhcUxi6jvPTExoI8qo4sElnjgpSVR5JxCDVPbQLK3KBDbLgsizCPUy1yOcIDwIOtgdGEO8DQPm8whEzvWZyBclUaftt017fRqPLgcDKNxlVSBTiMDSSNTjRhFrhlV9tCkaPInIlZqFqlxIdCiPUGD4iuYlB285/hPPigdtbtp/Dj5ejgiokxhoFloJW4hvYyOGijdh4IyKHDYc+xA7AkaaImD747uMULZwqfUGrh12Ay8Je2qN8xdJTBks/5NcYZmU= cwesterhold@chriss-mbp.lan
+  # github:
+  #   - host: github.com
+  #     token: 
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
