@@ -1,5 +1,5 @@
 app:
-  title: Backstage Example App
+  title: Backstage Developer Portal
   baseUrl: http://localhost:3000
   googleAnalyticsTrackingId: # UA-000000-0
   #datadogRum:
@@ -23,18 +23,18 @@ app:
             title: '#backstage'
 
 backend:
-  # Used for enabling authentication, secret is shared by all backend plugins
-  # See https://backstage.io/docs/tutorials/backend-to-backend-auth for
-  # information on the format
-  # auth:
-  #   keys:
-  #     - secret: ${BACKEND_SECRET}
+  auth:
+    keys:
+      - secret: "727"  #${BACKEND_SECRET}
+
   baseUrl: http://localhost:7007
   listen:
     port: 7007
   database:
     client: better-sqlite3
     connection: ':memory:'
+
+
   cache:
     store: memory
   cors:
@@ -162,7 +162,7 @@ allure:
 integrations:
   # github:
   #   - host: github.com
-  #     token: 
+  #     token:
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
@@ -219,49 +219,31 @@ catalog:
       #    groupFilter: securityEnabled eq false and mailEnabled eq true and groupTypes/any(c:c+eq+'Unified')
 
   locations:
-    # Add a location here to ingest it, for example from a URL:
-    #
-    #     - type: url
-    #       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
-    #
-    # For local development you can use a file location instead:
-    #
-    #     - type: file
-    #       target: ../catalog-model/examples/all-components.yaml
-    #
-    # File locations are relative to the current working directory of the
-    # backend, for example packages/backend/.
-
     # Backstage example components
-    - type: file
-      target: ../catalog-model/examples/all-components.yaml
-    # Example component for github-actions and TechDocs
-    - type: file
-      target: ../../plugins/github-actions/examples/sample.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
     # Example component for TechDocs
-    - type: file
-      target: ../../plugins/techdocs-backend/examples/documented-component/catalog-info.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/plugins/techdocs-backend/examples/documented-component/catalog-info.yaml
     # Backstage example APIs
-    - type: file
-      target: ../catalog-model/examples/all-apis.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
     # Backstage example resources
-    - type: file
-      target: ../catalog-model/examples/all-resources.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-resources.yaml
     # Backstage example systems
-    - type: file
-      target: ../catalog-model/examples/all-systems.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-systems.yaml
     # Backstage example domains
-    - type: file
-      target: ../catalog-model/examples/all-domains.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-domains.yaml
     # Backstage example templates
-    - type: file
-      target: ../../plugins/scaffolder-backend/sample-templates/all-templates.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/all-templates.yaml
     # Backstage example groups and users
-    - type: file
-      target: ../catalog-model/examples/acme-corp.yaml
-    # Backstage end-to-end tests of TechDocs
-    - type: file
-      target: ../../cypress/e2e-fixture.catalog.info.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+
 scaffolder:
   # Use to customize default commit author info used when new components are created
    defaultAuthor:
@@ -280,7 +262,7 @@ auth:
   #    projectId: my-project
   #    path: my-sessions
 
-  environment: development
+  environment: production
   ### Providing an auth.session.secret will enable session support in the auth-backend
   # session:
   #   secret: custom session secret
@@ -289,11 +271,11 @@ auth:
      #   development:
      #     clientId: ${AUTH_GOOGLE_CLIENT_ID}
      #     clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
-     # github:
-     #   development:
-     #     clientId: ${AUTH_GITHUB_CLIENT_ID}
-     #     clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
-     #     enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
     # gitlab:
     #   development:
     #     clientId: ${AUTH_GITLAB_CLIENT_ID}
