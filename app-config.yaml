@@ -130,8 +130,7 @@ techdocs:
       containerName: 'backstage' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
       credentials:
         accountName: manishbackstagetechdocs
-        accountKey: y2LoPwWNwiraARbde42hCAX+bmCwTEbN2kjr/UY34T74ae/ql591WPqw0ypk6RnFvx1XkzQQVZki+ASt/dj9kA==
-        # ${AZURE_TECHDOCS_STORAGE_KEY}
+        accountKey: ${AZURE_TECHDOCS_STORAGE_KEY}
 
 sentry:
   organization: my-company
@@ -164,8 +163,7 @@ allure:
 integrations:
   github:
     - host: github.com
-      token: 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
-      # ${GITHUB_TOKEN}
+      token: ${GITHUB_TOKEN}
   #     token:
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
