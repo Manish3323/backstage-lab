@@ -49,7 +49,7 @@ backend:
     allow:
       - host: example.com
       - host: '*.mozilla.org'
-  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+  # workingDirectory: /t # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 # See README.md in the proxy-backend plugin for information on the configuration format
 proxy:
@@ -116,20 +116,22 @@ proxy:
       Authorization: Basic ${GOCD_AUTH_CREDENTIALS}
 
 organization:
-  name: ThougthWorks
+  name: Thougthtworks
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: 'local' # Alternatives - 'external'
-  generator:
-    runIn: 'docker'
-    # dockerImage: my-org/techdocs # use a custom docker image
-    # pullImage: true # or false to disable automatic pulling of image (e.g. if custom docker login is required)
+  builder: 'external'
   publisher:
-    type: 'local' # Alternatives - 'googleGcs' or 'awsS3' or 'azureBlobStorage' or 'openStackSwift'. Read documentation for using alternatives.
+    type: 'azureBlobStorage'
+    azureBlobStorage:
+      containerName: 'backstage' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+      credentials:
+        accountName: manishbackstagetechdocs
+        accountKey: y2LoPwWNwiraARbde42hCAX+bmCwTEbN2kjr/UY34T74ae/ql591WPqw0ypk6RnFvx1XkzQQVZki+ASt/dj9kA==
+        # ${AZURE_TECHDOCS_STORAGE_KEY}
 
 sentry:
   organization: my-company
@@ -160,8 +162,10 @@ allure:
   baseUrl: http://localhost:5050/allure-docker-service
 
 integrations:
-  # github:
-  #   - host: github.com
+  github:
+    - host: github.com
+      token: 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
+      # ${GITHUB_TOKEN}
   #     token:
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
@@ -188,6 +192,7 @@ catalog:
         - System
         - Domain
         - Location
+        - DataProduct
 
   processors:
     ldapOrg:
@@ -243,14 +248,21 @@ catalog:
     # Backstage example groups and users
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-
+    - type: url
+      target: https://github.com/Manish3323/DataProduct1/blob/master/catalog-info.yaml
+      rules:
+        - allow: [DataProduct]
+    - type: url
+      target: https://github.com/Manish3323/DataProduct2/blob/master/catalog-info.yaml
+      rules:
+        - allow: [DataProduct]
 scaffolder:
   # Use to customize default commit author info used when new components are created
-   defaultAuthor:
-     name: Scaffolder
-     email: scaffolder@backstage.io
+  defaultAuthor:
+    name: Scaffolder
+    email: scaffolder@backstage.io
   # Use to customize the default commit message when new components are created
-   defaultCommitMessage: 'Initial commit'
+  defaultCommitMessage: 'Initial commit'
 
 auth:
   ### Add auth.keyStore.provider to more granularly control how to store JWK data when running
@@ -267,10 +279,10 @@ auth:
   # session:
   #   secret: custom session secret
   providers:
-     # google:
-     #   development:
-     #     clientId: ${AUTH_GOOGLE_CLIENT_ID}
-     #     clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
+    # google:
+    #   development:
+    #     clientId: ${AUTH_GOOGLE_CLIENT_ID}
+    #     clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
     # github:
       # development:
         # clientId: ${AUTH_GITHUB_CLIENT_ID}
