@@ -25,7 +25,7 @@ app:
 backend:
   auth:
     keys:
-      - secret: "727"  #${BACKEND_SECRET}
+      - secret: ${BACKEND_SECRET}
 
   baseUrl: http://localhost:7007
   listen:
