@@ -1,3 +1,6 @@
+organization:
+  name: Thougthtworks
+
 app:
   title: Backstage Developer Portal
   baseUrl: http://localhost:3000
@@ -26,10 +29,9 @@ backend:
   auth:
     keys:
       - secret: ${BACKEND_SECRET}
-
   # this needs to be provided beforehand.
   # this is a external ip of loadbalancer in portal
-  # get this ip by 
+  # get this ip by
   # > kubectl get services -n <namespace>
   baseUrl: http://20.252.40.201
   listen:
@@ -41,8 +43,6 @@ backend:
       port: ${POSTGRES_SERVICE_PORT}
       user: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
-
-
   cache:
     store: memory
   cors:
@@ -124,8 +124,7 @@ proxy:
     headers:
       Authorization: Basic ${GOCD_AUTH_CREDENTIALS}
 
-organization:
-  name: Thougthtworks
+
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -151,9 +150,9 @@ techdocs:
     awsS3:
       bucketName: ${AWS_TECHDOCS_BUCKET_NAME}
       region: ${AWS_REGION}
-        credentials:
-          accessKeyId: ${AWS_ACCESS_KEY_ID}
-          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+      credentials:
+        accessKeyId: ${AWS_ACCESS_KEY_ID}
+        secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
 
 
 sentry:
@@ -270,7 +269,6 @@ catalog:
     # Backstage example groups and users
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-
     # Example of custom Kind DataProduct
     - type: url
       target: https://github.com/Manish3323/DataProduct1/blob/master/catalog-info.yaml
