@@ -18,6 +18,7 @@ spec:
       containers:
         - name: backstage
           image: backstagepp.azurecr.io/backstage:54
+          #image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backstage:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -27,9 +28,14 @@ spec:
                 name: backstage-secrets
           readinessProbe:
             httpGet:
-              port: 7007
-              path: /healthcheck
+              path: /readiness_check
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
           livenessProbe:
             httpGet:
-              port: 7007
-              path: /healthcheck
+              path: /liveness_check
+              port: 8080
+            initialDelaySeconds: 70
+            timeoutSeconds: 10
+            failureThreshold: 10

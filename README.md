@@ -101,4 +101,8 @@ docker run -it -p 7000:7000 backstage
 
 # Deploy into Kubernetes
 
+Here is a great article for how to use CodePipeline and CodeDeploy to ECR and EKS. All of the Kubernetes yaml files can be found in the kubernetes folder and the buildspec files can be found in the pipelines-for-aws folder.
+
+https://itnext.io/continuous-deployment-to-kubernetes-eks-using-aws-codepipeline-aws-codecommit-and-aws-codebuild-fce7d6c18e83
+
 For more information check out the Backstage site - https://backstage.io/docs/deployment/
