@@ -28,7 +28,7 @@ steps:
       kubernetesCluster: aks64d8
       namespace: backstagehttp
       command: apply
-      arguments: -f kubernetes/backstage.yaml -f kubernetes/backstage-service.yaml
+      arguments: -f kubernetes/backstage-pg-deployment.yaml -f kubernetes/backstage-pg-service.yaml
       secretType: generic
       secretArguments: --from-literal=GITHUB_TOKEN=$(GITHUB-TOKEN) --from-literal=AZURE_TECHDOCS_STORAGE_KEY=$(AZURE-TECHDOCS-STORAGE-KEY)
       secretName: backstage-secrets

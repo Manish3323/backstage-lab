@@ -28,15 +28,19 @@ backend:
       - secret: ${BACKEND_SECRET}
 
   # this needs to be provided beforehand.
-  # this is a external ip of loadbalancer in Azure portal 
+  # this is a external ip of loadbalancer in portal
   # get this ip by 
   # > kubectl get services -n <namespace>
   baseUrl: http://20.252.40.201
   listen:
     port: 7007
   database:
-    client: better-sqlite3
-    connection: ':memory:'
+    client: pg
+    connection:
+      host: ${POSTGRES_SERVICE_HOST}
+      port: ${POSTGRES_SERVICE_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
 
 
   cache:
@@ -127,15 +131,30 @@ organization:
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
+
+## Use below for Azure storage of techdocs
+#techdocs:
+#  builder: 'external'
+#  publisher:
+#    type: 'azureBlobStorage'
+#    azureBlobStorage:
+#      containerName: ${AZURE_TECHDOCS_BUCKET_NAME} # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+#      credentials:
+#        accountName: ${AZURE_TECHDOCS_ACCOUNT_NAME}
+#        accountKey: ${AZURE_TECHDOCS_STORAGE_KEY}
+
+## Use below for AWS S3 storage of techdocs
 techdocs:
   builder: 'external'
   publisher:
-    type: 'azureBlobStorage'
-    azureBlobStorage:
-      containerName: 'backstage' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
-      credentials:
-        accountName: manishbackstagetechdocs
-        accountKey: ${AZURE_TECHDOCS_STORAGE_KEY}
+    type: 'awsS3'
+    awsS3:
+      bucketName: ${AWS_TECHDOCS_BUCKET_NAME}
+      region: ${AWS_REGION}
+        credentials:
+          accessKeyId: ${AWS_ACCESS_KEY_ID}
+          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+
 
 sentry:
   organization: my-company
@@ -170,7 +189,6 @@ integrations:
     - host: github.com
       token: ${GITHUB_TOKEN}
 
-  #     token:
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
@@ -252,6 +270,8 @@ catalog:
     # Backstage example groups and users
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+
+    # Example of custom Kind DataProduct
     - type: url
       target: https://github.com/Manish3323/DataProduct1/blob/master/catalog-info.yaml
       rules:
@@ -260,13 +280,7 @@ catalog:
       target: https://github.com/Manish3323/DataProduct2/blob/master/catalog-info.yaml
       rules:
         - allow: [DataProduct]
-scaffolder:
-  # Use to customize default commit author info used when new components are created
-  defaultAuthor:
-    name: Scaffolder
-    email: scaffolder@backstage.io
-  # Use to customize the default commit message when new components are created
-  defaultCommitMessage: 'Initial commit'
+
 
 auth:
   ### Add auth.keyStore.provider to more granularly control how to store JWK data when running

@@ -1,9 +1,9 @@
-# kubernetes/backstage-service.yaml
+# kubernetes/backstage-pg-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: backstage
-  namespace: backstagehttp
+  namespace: backstage
 spec:
   selector:
     app: backstage

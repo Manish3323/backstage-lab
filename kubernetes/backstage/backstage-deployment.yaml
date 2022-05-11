@@ -1,9 +1,10 @@
-# kubernetes/backstage.yaml
+#todo - Change the image to point to your image repo
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backstage
-  namespace: backstagehttp
+  namespace: backstage
 spec:
   replicas: 1
   selector:
@@ -24,3 +25,11 @@ spec:
           envFrom:
             - secretRef:
                 name: backstage-secrets
+          readinessProbe:
+            httpGet:
+              port: 7007
+              path: /healthcheck
+          livenessProbe:
+            httpGet:
+              port: 7007
+              path: /healthcheck
