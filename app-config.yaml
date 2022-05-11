@@ -25,7 +25,7 @@ app:
 backend:
   auth:
     keys:
-      - secret: '727'
+      - secret: ${BACKEND_SECRET}
 
   # this needs to be provided beforehand.
   # this is a external ip of loadbalancer in Azure portal 
@@ -169,6 +169,7 @@ integrations:
   github:
     - host: github.com
       token: ${GITHUB_TOKEN}
+
   #     token:
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
