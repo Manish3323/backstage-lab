@@ -7,6 +7,8 @@ variables:
   - group: backstage-group
 
 steps:
+  - bash: |
+      cat app-config.yaml |grep "baseUrl:"
   - task: Kubernetes@1
     displayName: Create Namespace
     inputs:
