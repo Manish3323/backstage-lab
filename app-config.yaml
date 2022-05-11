@@ -23,9 +23,9 @@ app:
             title: '#backstage'
 
 backend:
-  auth:
-    keys:
-      - secret: ${BACKEND_SECRET}
+  # auth:
+  #   keys:
+  #     - secret: ${BACKEND_SECRET}
 
   # this needs to be provided beforehand.
   # this is a external ip of loadbalancer in Azure portal 
