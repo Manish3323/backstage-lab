@@ -53,7 +53,6 @@ import techdocs from './plugins/techdocs';
 import techInsights from './plugins/techInsights';
 import todo from './plugins/todo';
 import graphql from './plugins/graphql';
-import app from './plugins/app';
 import badges from './plugins/badges';
 import jenkins from './plugins/jenkins';
 import permission from './plugins/permission';
@@ -126,7 +125,6 @@ async function main() {
   const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
   const kafkaEnv = useHotMemoize(module, () => createEnv('kafka'));
   const graphqlEnv = useHotMemoize(module, () => createEnv('graphql'));
-  const appEnv = useHotMemoize(module, () => createEnv('app'));
   const badgesEnv = useHotMemoize(module, () => createEnv('badges'));
   const jenkinsEnv = useHotMemoize(module, () => createEnv('jenkins'));
   const techInsightsEnv = useHotMemoize(module, () =>
@@ -158,8 +156,7 @@ async function main() {
     .loadConfig(config)
     .addRouter('', await healthcheck(healthcheckEnv))
     .addRouter('', metricsHandler())
-    .addRouter('/api', apiRouter)
-    .addRouter('', await app(appEnv));
+    .addRouter('/api', apiRouter);
 
   await service.start().catch(err => {
     logger.error(err);
