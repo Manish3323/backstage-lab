@@ -14,8 +14,8 @@ steps:
     inputs:
       connectionType: Azure Resource Manager
       azureSubscriptionEndpoint: service-connection-k8s
-      azureResourceGroup: MyResourceGroup
-      kubernetesCluster: aks64d8
+      azureResourceGroup: backstage-aks_group
+      kubernetesCluster: backstage-aks
       command: apply
       arguments: -f kubernetes/namespace.yaml
     
@@ -24,8 +24,8 @@ steps:
     inputs:
       connectionType: Azure Resource Manager
       azureSubscriptionEndpoint: service-connection-k8s
-      azureResourceGroup: MyResourceGroup
-      kubernetesCluster: aks64d8
+      azureResourceGroup: backstage-aks_group
+      kubernetesCluster: backstage-aks
       namespace: backstagehttp
       command: apply
       arguments: -f kubernetes/backstage.yaml -f kubernetes/backstage-service.yaml
