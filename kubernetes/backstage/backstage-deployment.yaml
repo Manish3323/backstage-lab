@@ -1,0 +1,41 @@
+#todo - Change the image to point to your image repo
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backstage
+  template:
+    metadata:
+      labels:
+        app: backstage
+    spec:
+      containers:
+        - name: backstage
+          image: backstagepp.azurecr.io/backstage:54
+          #image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backstage:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 7007
+          envFrom:
+            - secretRef:
+                name: backstage-secrets
+          readinessProbe:
+            httpGet:
+              path: /readiness_check
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /liveness_check
+              port: 8080
+            initialDelaySeconds: 70
+            timeoutSeconds: 10
+            failureThreshold: 10

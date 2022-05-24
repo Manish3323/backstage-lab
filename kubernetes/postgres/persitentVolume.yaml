@@ -1,0 +1,37 @@
+#Note this will only need to be applied once in your K8 instance
+#This is here to help with new installs
+# This is set with 5G of storage - adjust as necessary
+
+#The PersistentVolume configured above uses local Kubernetes node storage.
+#This should be replaced with a cloud volume, network attached storage,
+#or something more persistent beyond a Kubernetes node.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-storage
+  namespace: backstage
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10G
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: '/mnt/data'
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-storage-claim
+  namespace: backstage
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10G
